@@ -29,34 +29,34 @@ Objective-C:
 // ...
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 
-    // change indicator view style to white
-    self.tableView.infiniteScrollIndicatorStyle = UIActivityIndicatorViewStyleWhite;
+	// change indicator view style to white
+	self.tableView.infiniteScrollIndicatorStyle = UIActivityIndicatorViewStyleWhite;
 
-    // setup infinite scroll
-    [self.tableView addInfiniteScrollWithHandler:^(UITableView* tableView) {
-        //
-        // fetch your data here, can be async operation,
-        // just make sure to call finishInfiniteScroll in the end
-        //
+	// setup infinite scroll
+	[self.tableView addInfiniteScrollWithHandler:^(UITableView* tableView) {
+		//
+		// fetch your data here, can be async operation,
+		// just make sure to call finishInfiniteScroll in the end
+		//
 
-        NSArray<NSIndexPath *> * indexPaths; // index paths of updated rows
-        
-        // make sure to update tableView before calling -finishInfiniteScroll
-        [tableView beginUpdates];
-        [tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
-        [tableView endUpdates];
+		NSArray<NSIndexPath *> * indexPaths; // index paths of updated rows
 
-        // finish infinite scroll animation
-        [tableView finishInfiniteScroll];
-    }];
+		// make sure to update tableView before calling -finishInfiniteScroll
+		[tableView beginUpdates];
+		[tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+		[tableView endUpdates];
+
+		// finish infinite scroll animation
+		[tableView finishInfiniteScroll];
+	}];
 }
 ```
 
 Swift
 
-Before using InfiniteScroll you have to add the following line in your bridging header file: 
+Before using InfiniteScroll you have to add the following line in your bridging header file:
 
 ```objc
 #import <UIScrollView_InfiniteScroll/UIScrollView+InfiniteScroll.h>
@@ -64,28 +64,28 @@ Before using InfiniteScroll you have to add the following line in your bridging 
 
 ```swift
 override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    // change indicator view style to white
-    tableView.infiniteScrollIndicatorStyle = .White
-    
-    // Add infinite scroll handler
-    tableView.addInfiniteScrollWithHandler { (tableView) -> Void in
-        //
-        // fetch your data here, can be async operation,
-        // just make sure to call finishInfiniteScroll in the end
-        //
+	super.viewDidLoad()
 
-        let indexPaths = [NSIndexPath]() // index paths of updated rows
-        
-        // make sure you update tableView before calling -finishInfiniteScroll
-        tableView.beginUpdates()
-        tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
-        tableView.endUpdates()
-        
-        // finish infinite scroll animation
-        tableView.finishInfiniteScroll()
-    }
+	// change indicator view style to white
+	tableView.infiniteScrollIndicatorStyle = .White
+
+	// Add infinite scroll handler
+	tableView.addInfiniteScrollWithHandler { (tableView) -> Void in
+		//
+		// fetch your data here, can be async operation,
+		// just make sure to call finishInfiniteScroll in the end
+		//
+
+		let indexPaths = [NSIndexPath]() // index paths of updated rows
+
+		// make sure you update tableView before calling -finishInfiniteScroll
+		tableView.beginUpdates()
+		tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+		tableView.endUpdates()
+
+		// finish infinite scroll animation
+		tableView.finishInfiniteScroll()
+	}
 }
 ```
 
@@ -102,76 +102,76 @@ Objective-C:
 // ...
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    __weak typeof(self) weakSelf = self;
+	[super viewDidLoad];
 
-    [self.collectionView addInfiniteScrollWithHandler:^(UICollectionView* collectionView) {
-        //
-        // fetch your data here, can be async operation,
-        // just make sure to call finishInfiniteScroll in the end
-        //
-        
-        // suppose this is an array with new data
-        NSArray *newStories;
-        
-        NSMutableArray *indexPaths = [NSMutableArray new];
-        NSInteger index = weakSelf.allStories.count;
-    
-        // create index paths for affected items
-        for(Story *story in newStories) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index++ inSection:0];
+	__weak typeof(self) weakSelf = self;
 
-            [weakSelf.allStories addObject:story];
-            [indexPaths addObject:indexPath];
-        }
-        
-        // Update collection view
-        [collectionView performBatchUpdates:^{
-            // add new items into collection
-            [collectionView insertItemsAtIndexPaths:indexPaths];
-        } completion:^(BOOL finished) {
-            // finish infinite scroll animations
-            [collectionView finishInfiniteScroll];
-        }];
-    }];
+	[self.collectionView addInfiniteScrollWithHandler:^(UICollectionView* collectionView) {
+		//
+		// fetch your data here, can be async operation,
+		// just make sure to call finishInfiniteScroll in the end
+		//
+
+		// suppose this is an array with new data
+		NSArray *newStories;
+
+		NSMutableArray *indexPaths = [NSMutableArray new];
+		NSInteger index = weakSelf.allStories.count;
+
+		// create index paths for affected items
+		for(Story *story in newStories) {
+			NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index++ inSection:0];
+
+			[weakSelf.allStories addObject:story];
+			[indexPaths addObject:indexPath];
+		}
+
+		// Update collection view
+		[collectionView performBatchUpdates:^{
+			// add new items into collection
+			[collectionView insertItemsAtIndexPaths:indexPaths];
+		} completion:^(BOOL finished) {
+			// finish infinite scroll animations
+			[collectionView finishInfiniteScroll];
+		}];
+	}];
 }
 ```
 
-Swift: 
+Swift:
 
 ```swift
 override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    // Add infinite scroll handler
-    collectionView?.addInfiniteScrollWithHandler { [weak self] (scrollView) -> Void in
-        let collectionView = scrollView as! UICollectionView
-        
-        // suppose this is an array with new data
-        let newStories = [Story]()
-        
-        var indexPaths = [NSIndexPath]()
-        let index = self?.allStories.count
-        
-        // create index paths for affected items
-        for story in newStories {
-            let indexPath = NSIndexPath(forItem: index++, inSection: 0)
-            
-            indexPaths.append(indexPath)
-            self?.allStories.append(story)
-        }
-        
-        // Update collection view
-        collectionView.performBatchUpdates({ () -> Void in
-            // add new items into collection
-            collectionView.insertItemsAtIndexPaths(indexPaths)
-        }, completion: { (finished) -> Void in
-            // finish infinite scroll animations
-            collectionView.finishInfiniteScroll()
-        });
-        
-    }
+	super.viewDidLoad()
+
+	// Add infinite scroll handler
+	collectionView?.addInfiniteScrollWithHandler { [weak self] (scrollView) -> Void in
+		let collectionView = scrollView as! UICollectionView
+
+		// suppose this is an array with new data
+		let newStories = [Story]()
+
+		var indexPaths = [NSIndexPath]()
+		let index = self?.allStories.count
+
+		// create index paths for affected items
+		for story in newStories {
+			let indexPath = NSIndexPath(forItem: index++, inSection: 0)
+
+			indexPaths.append(indexPath)
+			self?.allStories.append(story)
+		}
+
+		// Update collection view
+		collectionView.performBatchUpdates({ () -> Void in
+			// add new items into collection
+			collectionView.insertItemsAtIndexPaths(indexPaths)
+		}, completion: { (finished) -> Void in
+			// finish infinite scroll animations
+			collectionView.finishInfiniteScroll()
+		});
+
+	}
 }
 ```
 
@@ -186,7 +186,7 @@ Custom indicator must be a subclass of `UIView` and implement the following meth
 - (void)stopAnimating;
 ```
 
-Objective-C: 
+Objective-C:
 ```objc
 // optionally you can use custom indicator view
 CustomInfiniteIndicator *infiniteIndicator = [[CustomInfiniteIndicator alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
@@ -194,7 +194,7 @@ CustomInfiniteIndicator *infiniteIndicator = [[CustomInfiniteIndicator alloc] in
 self.tableView.infiniteScrollIndicatorView = indicator;
 ```
 
-Swift: 
+Swift:
 ```swift
 // optionally you can use custom indicator view
 tableView.infiniteScrollIndicatorView = CustomInfiniteIndicator(frame: CGRectMake(0, 0, 24, 24))
@@ -212,49 +212,12 @@ At the moment InfiniteScroll uses indicator's frame directly so make sure you si
 
 Sometimes you need to prevent the infinite scroll from continuing. For example, if your search API has no more results, it does not make sense to keep making the requests or to show the spinner.
 
-Objective-C: 
+Objective-C:
 ```objc
 // Provide a block to be called right before a infinite scroll event is triggered.  Return YES to allow or NO to prevent it from triggering.
 [self.tableView setShouldShowInfiniteScrollHandler:^BOOL(UIScrollView *scrollView) {
-    // Only show up to 5 pages then prevent the infinite scroll
-    return (weakSelf.currentPage < 5);
+	// Only show up to 5 pages then prevent the infinite scroll
+	return (weakSelf.currentPage < 5);
 }];
 ```
 
-### Seamlessly preload content
-
-Ideally you want your content to flow seamlessly without ever showing a spinner. Infinite scroll offers an option to specify offset in points that will be used to start preloader before user reaches the bottom of scroll view. 
-
-The proper balance between the number of results you load each time and large enough offset should give your users a decent experience. Most likely you will have to come up with your own formula for the combination of those based on kind of content and device dimensions.
-
-Objective-C:
-
-```objc
-// Preload more data 500pt before reaching the bottom of scroll view.
-tableView.infiniteScrollTriggerOffset = 500;
-```
-
-### Contributors
-
-* [@GorkaMM](https://github.com/GorkaMM)<br/>
-  Added custom trigger offset
-* [@intrepidmatt](https://github.com/intrepidmatt)<br/>
-  Solved longstanding issue with dynamic updates in table views (see [#31](https://github.com/pronebird/UIScrollView-InfiniteScroll/issues/31))
-* Ryan Bertrand [@RyanBertrand](https://github.com/RyanBertrand)<br/>
-  Added a handler to conditionally prevent the infinite scroll from showing
-* Maxim Veksler [@maximveksler](https://github.com/maximveksler)<br/>
-  Swift 2.2 upgrade
-* Shigeyuki Takeuchi [@takeshig](https://github.com/takeshig)<br/>
-  Add Carthage support
-* Ivan Chirkov [@nsleader](https://github.com/nsleader)<br/>
-  Custom indicators support
-* Alex Shevchenko [@skeeet](https://github.com/skeeet)<br/>
-  Fix for bounce back glitch when content size is smaller than view bounds
-* Vlad [brightsider](https://github.com/brightsider)<br/>
-  Add access to check loading status
-
-.. and many others who reported issues and participated in conversations
-
-### Attributions
-
-Demo app icon by [PixelResort](http://appicontemplate.com/ios8/).
